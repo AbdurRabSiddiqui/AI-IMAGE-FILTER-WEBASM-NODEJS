@@ -6,6 +6,7 @@ export default function useWasm() {
     async function loadWasm() {
       try {
         const wasmModule = await import("@/wasm-math/wasm_math");
+        await wasmModule.default()
         setWasm(wasmModule);
       } catch (err) {
         console.error("Failed to load WASM:", err);
