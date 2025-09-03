@@ -3,7 +3,7 @@
 import useWasm from "./hooks/useWasm";
 import { useState } from "react";
 import { preprocessImageForONNX } from "@/lib/image-preprocess";
-import { postprocessONNXOutput, scaleDataUrl, blendDataUrls } from "@/lib/image-postprocess";
+import { postprocessONNXOutput, scaleDataUrl, blendDataUrls, cropDataUrl } from "@/lib/image-postprocess";
 import { logger } from "@/lib/logger";
 import { runOrt } from "@/lib/onnx-runtime";
 export default function Home() {
@@ -75,7 +75,7 @@ export default function Home() {
       logger.info('Running ONNX inference...', { modelPath });
       
       // Prepare tensor and dims [1, 3, H, W]
-      const { tensor, width, height, originalWidth, originalHeight } = preprocessedInput;
+      const { tensor, width, height, originalWidth, originalHeight, letterbox } = preprocessedInput;
       const dims: number[] = [1, 3, height, width];
       const output = await runOrt(modelPath, { data: tensor, dims });
 
@@ -96,8 +96,16 @@ export default function Home() {
         return;
       }
       
+      // Crop out the letterbox area before scaling back
+      const cropped = await cropDataUrl(
+        styled224,
+        letterbox.offsetX,
+        letterbox.offsetY,
+        letterbox.contentWidth,
+        letterbox.contentHeight
+      );
       // Scale back to original dimensions for display
-      const styledScaled = await scaleDataUrl(styled224, originalWidth, originalHeight);
+      const styledScaled = await scaleDataUrl(cropped, originalWidth, originalHeight);
       // Also scale the original image preview to match output size for blending
       if (imagePreview) {
         const originalScaled = await scaleDataUrl(imagePreview, originalWidth, originalHeight);

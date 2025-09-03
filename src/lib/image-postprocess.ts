@@ -33,6 +33,33 @@ export function postprocessONNXOutput(
   }
 }
 
+export function cropDataUrl(
+  dataUrl: string,
+  sx: number,
+  sy: number,
+  sw: number,
+  syh?: number // unused, placeholder to avoid accidental breaking changes
+): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = sw;
+      canvas.height = arguments[5] as number || sw; // keep square by default if not provided
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(dataUrl);
+        return;
+      }
+      const sh = arguments[5] as number || sw;
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+      resolve(canvas.toDataURL('image/jpeg', 0.9));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 export function scaleDataUrl(
   dataUrl: string,
   targetWidth: number,
