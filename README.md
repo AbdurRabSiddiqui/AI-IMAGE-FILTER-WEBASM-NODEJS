@@ -84,7 +84,6 @@ public/
 ## Notes & Limitations
 
 - Fast Neural Style models expect 224×224 inputs; letterboxing avoids stretch but reduces raw detail. We crop the padding and upscale the output for display.
-- For higher fidelity and arbitrary styles, consider upgrading to AdaIN or WCT2 (content + style image) ONNX.
 
 ## License
 
