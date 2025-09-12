@@ -38,21 +38,21 @@ export function cropDataUrl(
   sx: number,
   sy: number,
   sw: number,
-  syh?: number // unused, placeholder to avoid accidental breaking changes
+  sh?: number
 ): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
+      const cropHeight = typeof sh === 'number' ? sh : sw;
       const canvas = document.createElement('canvas');
       canvas.width = sw;
-      canvas.height = arguments[5] as number || sw; // keep square by default if not provided
+      canvas.height = cropHeight;
       const ctx = canvas.getContext('2d');
       if (!ctx) {
         resolve(dataUrl);
         return;
       }
-      const sh = arguments[5] as number || sw;
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+      ctx.drawImage(img, sx, sy, sw, cropHeight, 0, 0, sw, cropHeight);
       resolve(canvas.toDataURL('image/jpeg', 0.9));
     };
     img.onerror = () => resolve(dataUrl);

@@ -7,7 +7,7 @@ import { postprocessONNXOutput, scaleDataUrl, blendDataUrls, cropDataUrl } from 
 import { logger } from "@/lib/logger";
 import { runOrt } from "@/lib/onnx-runtime";
 export default function Home() {
-  const wasm = useWasm();
+  useWasm();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<string>("");
