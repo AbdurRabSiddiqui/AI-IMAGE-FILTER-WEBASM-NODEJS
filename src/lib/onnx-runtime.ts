@@ -3,6 +3,14 @@ import { logger } from '@/lib/logger';
 
 const sessionCache: Map<string, Promise<ort.InferenceSession>> = new Map();
 
+// Reduce ORT internal logging noise in the console
+try {
+  const env: unknown = (ort as unknown as { env?: unknown }).env
+  if (env && typeof (env as Record<string, unknown>).logLevel !== 'undefined') {
+    ;(env as Record<string, unknown>).logLevel = 'error'
+  }
+} catch {}
+
 export async function getOrtSession(modelPath: string): Promise<ort.InferenceSession> {
   if (!sessionCache.has(modelPath)) {
     sessionCache.set(

@@ -29,6 +29,11 @@ self.addEventListener('fetch', (event) => {
 
   if (request.method !== 'GET') return;
 
+  // Only handle same-origin HTTP(S) requests. Ignore browser-extension and other schemes.
+  const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+  const isSameOrigin = url.origin === self.location.origin;
+  if (!isHttp || !isSameOrigin) return;
+
   // Cache-first for models, wasm and static assets
   const isCacheFirst =
     url.pathname.startsWith('/models/') ||
@@ -43,7 +48,10 @@ self.addEventListener('fetch', (event) => {
         const cached = await cache.match(request);
         if (cached) return cached;
         const response = await fetch(request);
-        cache.put(request, response.clone());
+        // Only cache successful (200) same-origin responses
+        if (response && response.ok) {
+          cache.put(request, response.clone());
+        }
         return response;
       })
     );
@@ -55,7 +63,9 @@ self.addEventListener('fetch', (event) => {
     fetch(request)
       .then((response) => {
         const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        if (response && response.ok) {
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        }
         return response;
       })
       .catch(() => caches.match(request))
