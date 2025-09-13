@@ -1,7 +1,7 @@
 // src/hooks/useWasm.ts
 import { useState, useEffect } from "react";
 
-type WasmModule = typeof import("@/wasm-math/wasm_math");
+type WasmModule = typeof import("@/wasm-math/wasm_math.js");
 
 export default function useWasm() {
   const [wasm, setWasm] = useState<WasmModule | null>(null);
