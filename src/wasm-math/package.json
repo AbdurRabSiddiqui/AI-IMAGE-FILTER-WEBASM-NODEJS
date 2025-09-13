@@ -1,0 +1,15 @@
+{
+  "name": "wasm-math",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "wasm_math_bg.wasm",
+    "wasm_math.js",
+    "wasm_math.d.ts"
+  ],
+  "main": "wasm_math.js",
+  "types": "wasm_math.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

@@ -1,0 +1,9 @@
+*
+
+# But keep the WASM artifacts needed at runtime
+!.gitignore
+!package.json
+!wasm_math.js
+!wasm_math.d.ts
+!wasm_math_bg.wasm
+!wasm_math_bg.wasm.d.ts
