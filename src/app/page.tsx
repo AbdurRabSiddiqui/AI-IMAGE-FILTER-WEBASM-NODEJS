@@ -131,8 +131,16 @@ export default function Home() {
     }
   };
   return (
-    <main className="min-h-screen p-24 flex flex-col items-center">
-      <h1 className="text-4xl font-bold mb-8 text-center">Next.js + WASM = 🔥</h1>
+    <main className="min-h-screen p-24 flex flex-col items-center relative overflow-hidden">
+      {/* Background rainbow glow */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
+        <div className="w-[120vmax] h-[120vmax] rounded-full bg-[conic-gradient(at_top_right,_#06b6d4,_#22c55e,_#f59e0b,_#ef4444,_#8b5cf6,_#06b6d4)] blur-3xl opacity-30 animate-spin [animation-duration:20s]" />
+      </div>
+
+      <div className="text-center mb-8">
+        <h1 className="text-5xl font-bold tracking-tight">Image Artify</h1>
+        <p className="mt-2 text-sm text-gray-400">Made with Web Assembly Node js</p>
+      </div>
       <div className="space-y-6 w-full max-w-2xl">
         {/* Image Upload Field */}
         <div className="flex flex-col space-y-4 text-center">
