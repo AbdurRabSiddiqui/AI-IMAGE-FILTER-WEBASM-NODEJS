@@ -24,6 +24,12 @@ export default function Home() {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
       setSelectedImage(file);
+      // Reset processing-related state for a clean run on new image
+      setStyledImage(null);
+      setBlendedImage(null);
+      setOriginalImageScaled(null);
+      setResult(null);
+      setStyleStrength(1);
       
       // Create preview URL
       const reader = new FileReader();
@@ -164,7 +170,13 @@ export default function Home() {
           <select
             id="style-selector"
             value={selectedStyle}
-            onChange={(e) => setSelectedStyle(e.target.value)}
+            onChange={(e) => {
+              setSelectedStyle(e.target.value);
+              // Reset blend strength when switching styles
+              setStyleStrength(1);
+              // If we already have a styled image, show the full style by default
+              if (styledImage) setBlendedImage(styledImage);
+            }}
             className="p-3 border-2 border-gray-300 rounded-lg bg-white hover:border-gray-400 focus:border-blue-500 focus:outline-none transition-colors text-gray-700 font-medium"
           >
             <option value="" disabled className="text-gray-400">
@@ -252,15 +264,6 @@ export default function Home() {
                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded"
               >
                 Download PNG
-              </button>
-              <button
-                onClick={() => {
-                  setStyleStrength(1);
-                  setBlendedImage(styledImage);
-                }}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded"
-              >
-                Reset
               </button>
             </div>
           </div>
